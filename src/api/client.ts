@@ -5,9 +5,10 @@ const BE_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:80
 let isRefreshing = false
 let failQueue: Array<{ resolve: (v: unknown) => void; reject: (e: unknown) => void }> = []
 
-export interface ApiError {
+export interface ApiError extends Error {
   status: number
   message: string
+  data?: any
 }
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
@@ -73,13 +74,15 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!response.ok) {
     let message = 'Error'
+    let data: any = null
     try {
       const errData = await response.json()
       message = errData.message ?? errData.error ?? `Error ${response.status}`
+      data = errData.data ?? errData
     } catch (e) {
       // Ignored
     }
-    throw { status: response.status, message } as ApiError
+    throw { status: response.status, message, data } as ApiError
   }
 
   // Handle 204 No Content
