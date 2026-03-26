@@ -1,32 +1,26 @@
-// app/(tabs)/_layout.tsx (Updated)
 import { Tabs } from 'expo-router'
 import React from 'react'
 
 import { HapticTab } from '@/components/haptic-tab'
 import { IconSymbol } from '@/components/ui/icon-symbol'
-import { Colors } from '@/constants/theme'
-import { useColorScheme } from '@/hooks/use-color-scheme'
-
-// Bắt buộc phải import file này để Tailwind hoạt động
-import '../global.css'
+import { colors, fonts } from '@/theme/index'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
-
-  // Ép kiểu chặt chẽ để TypeScript không kêu ca nữa
-  const theme = colorScheme === 'dark' ? 'dark' : 'light'
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[theme].tint,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textMuted,
         headerShown: false,
         tabBarButton: HapticTab,
-        // Chỉnh màu nền Tab bar cho hợp với Dark/Light mode
         tabBarStyle: {
-          backgroundColor: theme === 'dark' ? '#0f172a' : '#ffffff',
-          borderTopWidth: 0,
+          backgroundColor: 'rgba(26, 32, 64, 0.85)',
+          borderTopColor: colors.border,
+          borderTopWidth: 1,
         },
+        tabBarLabelStyle: {
+          fontFamily: fonts.bodyMedium,
+        }
       }}
     >
       <Tabs.Screen
@@ -39,11 +33,38 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="shop"
         options={{
-          title: 'Scanner', // Đổi tên Tab thành Scanner cho ngầu
+          title: 'Shop',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="viewfinder" color={color} />
+            <IconSymbol size={28} name="cart.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="tarot"
+        options={{
+          title: 'Tarot',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="star.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="my-cards"
+        options={{
+          title: 'Cards',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="rectangle.portrait.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Me',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="person.fill" color={color} />
           ),
         }}
       />
