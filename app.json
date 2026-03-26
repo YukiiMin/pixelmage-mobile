@@ -1,48 +1,165 @@
 {
   "expo": {
-    "name": "pixelmage-mobile",
+    "name": "PixelMage",
     "slug": "pixelmage-mobile",
     "version": "1.0.0",
+    "scheme": "pixelmage",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "pixelmagemobile",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#141832"
     },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
-      },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
-    },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
       "expo-router",
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 24,
+            "buildToolsVersion": "35.0.0",
+            "kotlinVersion": "1.9.24"
+          },
+          "ios": {
+            "deploymentTarget": "16.0"
+          }
+        }
+      ],
       [
         "expo-splash-screen",
         {
+          "backgroundColor": "#141832",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "resizeMode": "contain"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "PixelMage cần quyền camera để quét mã QR.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "PixelMage dùng cảm biến chuyển động để tạo hiệu ứng hologram trên thẻ bài."
+        }
+      ],
+      [
+        "react-native-nfc-manager",
+        {
+          "nfcPermission": "PixelMage cần quyền NFC để liên kết thẻ bài vật lý."
         }
       ]
     ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.brightway.pixelmage",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NFCReaderUsageDescription": "PixelMage cần quyền NFC để liên kết thẻ bài vật lý của bạn với tài khoản.",
+        "NSMotionUsageDescription": "PixelMage dùng cảm biến chuyển động để tạo hiệu ứng hologram 3D trên thẻ bài.",
+        "NSCameraUsageDescription": "PixelMage cần quyền camera để quét mã QR thanh toán và thẻ bài.",
+        "NSPhotoLibraryUsageDescription": "PixelMage cần quyền thư viện ảnh để lưu ảnh thẻ bài của bạn.",
+        "NSPhotoLibraryAddUsageDescription": "PixelMage cần quyền để lưu ảnh vào thư viện.",
+        "NSFaceIDUsageDescription": "PixelMage dùng Face ID để bảo vệ tài khoản của bạn.",
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ],
+        "com.apple.developer.nfc.readersession.formats": [
+          "NDEF",
+          "TAG"
+        ]
+      },
+      "entitlements": {
+        "com.apple.developer.nfc.readersession.formats": [
+          "NDEF",
+          "TAG"
+        ]
+      },
+      "associatedDomains": [
+        "applinks:pixelmage.app"
+      ]
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#141832"
+      },
+      "package": "com.brightway.pixelmage",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.NFC",
+        "android.permission.CAMERA",
+        "android.permission.VIBRATE",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.INTERNET",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.POST_NOTIFICATIONS"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "pixelmage.app",
+              "pathPrefix": "/nfc"
+            },
+            {
+              "scheme": "https",
+              "host": "pixelmage.app",
+              "pathPrefix": "/card"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "action": "android.nfc.action.TECH_DISCOVERED",
+          "category": [
+            "android.intent.category.DEFAULT"
+          ],
+          "data": []
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e06b6310-afef-4d34-9915-2072cf82a808"
+      }
     }
   }
 }

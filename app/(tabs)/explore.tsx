@@ -1,112 +1,93 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { IconSymbol } from '@/components/ui/icon-symbol'
+import React, { useEffect, useState } from 'react'
+import { Alert, Text, TouchableOpacity, View } from 'react-native'
+// Import các công cụ "làm phép" với NFC
+import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager'
 
 export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
-  );
-}
+  const [isWriting, setIsWriting] = useState(false)
+  // Khởi động NFC Manager khi mở màn hình này
+  useEffect(() => {
+    NfcManager.start()
+    return () => {
+      // Dọn dẹp khi chuyển sang màn hình khác
+      NfcManager.cancelTechnologyRequest()
+    }
+  }, [])
 
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});
+  const writeNfcTag = async () => {
+    try {
+      setIsWriting(true)
+
+      // 1. Xin quyền đọc cả 2 loại: Thẻ đã NDEF hoặc Thẻ chờ Format
+      await NfcManager.requestTechnology([NfcTech.Ndef, NfcTech.NdefFormatable])
+
+      // 2. Lấy hồ sơ của chiếc thẻ vừa chạm
+      const tag = await NfcManager.getTag()
+      if (!tag) throw new Error('Không đọc được thẻ')
+
+      // 3. Tạo gói tin (NDEF Message) chứa link mở app PixelMage
+      const url = 'pixelmage://'
+      const bytes = Ndef.encodeMessage([Ndef.uriRecord(url)])
+
+      if (bytes) {
+        // 4. Kiểm tra xem thẻ thuộc "hệ" nào để xài đúng chiêu
+        if (tag.techTypes?.includes('android.nfc.tech.Ndef')) {
+          // Thẻ ngoan, đã format sẵn -> Ghi thẳng
+          await NfcManager.ndefHandler.writeNdefMessage(bytes)
+        } else if (tag.techTypes?.includes('android.nfc.tech.NdefFormatable')) {
+          // Thẻ hoang dã, chưa format -> Vừa format vừa ghi
+          await NfcManager.ndefFormatableHandlerAndroid.formatNdef(bytes)
+        } else {
+          throw new Error('Thẻ này không hỗ trợ NDEF!')
+        }
+
+        Alert.alert('✨ Thành công!', 'Đã nạp phép thuật vào thẻ NFC.')
+      }
+    } catch (ex) {
+      console.warn('Lỗi ghi NFC:', ex)
+      Alert.alert(
+        'Thất bại',
+        'Giao tiếp thẻ bị lỗi hoặc bạn đã rút thẻ ra quá sớm.'
+      )
+    } finally {
+      // 5. Ngắt kết nối để thẻ được "nghỉ ngơi"
+      NfcManager.cancelTechnologyRequest()
+      setIsWriting(false)
+    }
+  }
+
+  return (
+    <View className="flex-1 items-center justify-center bg-slate-900 px-6">
+      <View className="mb-8 rounded-full bg-indigo-500/20 p-8 shadow-lg shadow-indigo-500/30">
+        <IconSymbol
+          size={80}
+          color={isWriting ? '#34d399' : '#818cf8'} // Đổi màu xanh lá khi đang quét
+          name="viewfinder"
+        />
+      </View>
+
+      <Text className="mb-3 text-4xl font-extrabold text-white tracking-tight">
+        PixelMage
+      </Text>
+
+      <Text className="mb-10 text-center text-base text-slate-400 leading-relaxed">
+        {isWriting
+          ? 'Đang tìm kiếm thẻ... Hãy chạm thẻ vào mặt lưng điện thoại của bạn ngay bây giờ!'
+          : 'Chạm thẻ NFC của bạn vào mặt lưng điện thoại để bắt đầu kết nối phép thuật.'}
+      </Text>
+
+      <TouchableOpacity
+        onPress={writeNfcTag}
+        disabled={isWriting}
+        className={`w-full max-w-xs items-center rounded-2xl py-4 shadow-sm ${
+          isWriting ? 'bg-slate-600' : 'bg-indigo-600 active:bg-indigo-700'
+        }`}
+      >
+        <Text className="text-lg font-bold text-white">
+          {isWriting ? 'Đang nạp...' : 'Nạp phép thuật (Ghi thẻ)'}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
