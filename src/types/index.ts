@@ -7,3 +7,7 @@ export interface ResponseBase<T> {
 export * from './inventory';
 export * from './collection';
 export * from './tarot';
+export * from './story';
+export * from './achievement';
+export * from './marketplace';
+export * from './order';

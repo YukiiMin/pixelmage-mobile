@@ -1,5 +1,6 @@
 import { fonts, rarityConfig } from '@/theme/index'
 import type { UserInventory } from '@/types/inventory'
+import type { MarketCardTemplate } from '@/types'
 import { Image } from 'expo-image'
 import { useEffect } from 'react'
 import { Pressable, Text, View } from 'react-native'
@@ -12,13 +13,14 @@ import Animated, {
 } from 'react-native-reanimated'
 
 interface Props {
-  card: UserInventory
+  card?: UserInventory
+  template?: MarketCardTemplate
   onPress: () => void
 }
 
-export function CardThumbnail({ card, onPress }: Props) {
-  const rarity = rarityConfig[card.cardTemplate.rarity]
-  const isLegendary = card.cardTemplate.rarity === 'LEGENDARY'
+export function CardThumbnail({ card, template, onPress }: Props) {
+  const itemTemplate = template ?? card?.cardTemplate
+  const isLegendary = itemTemplate?.rarity === 'LEGENDARY'
 
   const pulseAnim = useSharedValue(1)
 
@@ -36,12 +38,17 @@ export function CardThumbnail({ card, onPress }: Props) {
   }, [isLegendary, pulseAnim])
 
   const animatedGlowStyle = useAnimatedStyle(() => {
+    if (!itemTemplate) return {}
+    const rarity = rarityConfig[itemTemplate.rarity]
     if (!isLegendary || !rarity.glow) return {}
     return {
       shadowOpacity: rarity.glow.shadowOpacity * pulseAnim.value,
       shadowRadius: rarity.glow.shadowRadius * pulseAnim.value,
     }
   })
+
+  if (!itemTemplate) return null
+  const rarity = rarityConfig[itemTemplate.rarity]
 
   return (
     <Pressable onPress={onPress} className="w-1/2 p-2">
@@ -58,7 +65,7 @@ export function CardThumbnail({ card, onPress }: Props) {
         className="rounded-xl overflow-hidden aspect-[2.5/3.5] bg-[#0d1126]"
       >
         <Image
-          source={{ uri: card.cardTemplate.imageUrl }}
+          source={{ uri: itemTemplate.imageUrl }}
           className="flex-1 w-full"
           contentFit="cover"
           transition={200}
@@ -69,7 +76,7 @@ export function CardThumbnail({ card, onPress }: Props) {
             className="text-white text-sm"
             numberOfLines={1}
           >
-            {card.cardTemplate.name}
+            {itemTemplate.name}
           </Text>
           <Text
             style={{ fontFamily: fonts.stats, color: rarity.color }}
