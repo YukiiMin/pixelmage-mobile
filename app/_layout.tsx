@@ -7,6 +7,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
 import { secureStore } from '@/api/secureStore'
 import { StatusBar } from 'expo-status-bar'
+import { CustomToast } from '@/components/common/CustomToast'
 
 import './global.css'
 
@@ -60,6 +61,7 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <StatusBar style="light" />
       <Slot />
+      <CustomToast />
     </QueryClientProvider>
   )
 }

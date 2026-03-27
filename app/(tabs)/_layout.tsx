@@ -4,8 +4,10 @@ import React from 'react'
 import { HapticTab } from '@/components/haptic-tab'
 import { IconSymbol } from '@/components/ui/icon-symbol'
 import { colors, fonts } from '@/theme/index'
+import { useUserRole } from '@/hooks/useUserRole'
 
 export default function TabLayout() {
+  const { isStaff } = useUserRole()
   return (
     <Tabs
       screenOptions={{
@@ -68,6 +70,18 @@ export default function TabLayout() {
           ),
         }}
       />
+      
+      {isStaff && (
+        <Tabs.Screen
+          name="staff"
+          options={{
+            title: 'Staff',
+            tabBarIcon: ({ color }) => (
+              <IconSymbol size={28} name="wrench.fill" color={color} />
+            ),
+          }}
+        />
+      )}
     </Tabs>
   )
 }

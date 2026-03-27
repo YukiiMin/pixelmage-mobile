@@ -3,10 +3,13 @@ import { View, Text, ActivityIndicator } from 'react-native'
 import { Image } from 'expo-image'
 import { DeviceMotion } from 'expo-sensors'
 import Animated, { useSharedValue, withSpring, useAnimatedStyle, useReducedMotion } from 'react-native-reanimated'
-import Svg, { LinearGradient, Rect, Stop } from 'react-native-svg'
+import { Svg, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { useCardDetail } from '../hooks/useCardDetail'
+import { useUnlinkRequest } from '../hooks/useUnlinkRequest'
+import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { secureStore } from '@/api/secureStore'
 import { fonts, colors, rarityConfig } from '@/theme/index'
+import { TouchableOpacity } from 'react-native'
 
 export function CardDetailModal({ templateId }: { templateId: number }) {
   const [userId, setUserId] = useState<number | null>(null)
@@ -17,6 +20,9 @@ export function CardDetailModal({ templateId }: { templateId: number }) {
   }, [])
 
   const { data: card, isLoading } = useCardDetail(templateId, userId)
+  const unlinkRequest = useUnlinkRequest()
+  const [showUnlinkConfirm, setShowUnlinkConfirm] = useState(false)
+  const [showPendingState, setShowPendingState] = useState(false)
   const prefersReduced = useReducedMotion()
   
   const tiltX = useSharedValue(0)
@@ -108,8 +114,51 @@ export function CardDetailModal({ templateId }: { templateId: number }) {
           <Text style={{ fontFamily: fonts.body, color: colors.textMuted }} className="text-sm leading-5">
             {card.cardTemplate.description}
           </Text>
+
+          {/* Pending state OR Unlink button */}
+          {showPendingState ? (
+            <View className="mt-4 p-3 rounded bg-[#1A1A24] border border-border">
+              <Text style={{ fontFamily: fonts.bodyMedium, color: colors.textMuted }} className="text-center text-sm">
+                ⏳ Yêu cầu hủy đang chờ phê duyệt
+              </Text>
+            </View>
+          ) : (
+            card.nfcUid && (
+              <TouchableOpacity
+                onPress={() => setShowUnlinkConfirm(true)}
+                className="mt-4 py-3 rounded-lg border border-border flex-row items-center justify-center bg-error/10"
+              >
+                <Text style={{ fontFamily: fonts.bodyMedium, color: colors.error }} className="text-base text-center">
+                  Yêu cầu hủy liên kết
+                </Text>
+              </TouchableOpacity>
+            )
+          )}
         </View>
       </Animated.View>
+
+      <ConfirmModal
+        visible={showUnlinkConfirm}
+        title="Hủy liên kết thẻ"
+        body="Yêu cầu hủy liên kết sẽ cần Staff phê duyệt. Bạn có chắc muốn tiếp tục?"
+        confirmLabel="Gửi yêu cầu"
+        onConfirm={() => {
+          if (card.nfcUid) {
+            unlinkRequest.mutate(card.nfcUid, {
+              onSuccess: () => {
+                setShowUnlinkConfirm(false)
+                setShowPendingState(true)
+              },
+              onError: () => {
+                // 409 handled in hook with Toast
+                setShowUnlinkConfirm(false)
+              }
+            })
+          }
+        }}
+        onCancel={() => setShowUnlinkConfirm(false)}
+        loading={unlinkRequest.isPending}
+      />
     </View>
   )
 }
