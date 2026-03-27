@@ -1,4 +1,4 @@
-import type { CardTemplate } from './inventory';
+import type { CardTemplate } from './my-cards';
 
 export type ReadingMode = 'EXPLORE' | 'YOUR_DECK';
 export type ReadingSessionStatus = 'PENDING' | 'INTERPRETING' | 'COMPLETED' | 'EXPIRED';

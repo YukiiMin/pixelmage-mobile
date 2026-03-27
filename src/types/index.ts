@@ -9,7 +9,7 @@ export interface ResponseBase<T> {
 
 export * from './auth'
 export * from './account'
-export * from './inventory'
+export * from './my-cards'
 export * from './collection'
 export * from './tarot'
 export * from './story'

@@ -1,5 +1,5 @@
 import { fonts, rarityConfig } from '@/theme/index'
-import type { UserInventory } from '@/types/inventory'
+import type { UserInventory } from '@/types/my-cards'
 import type { MarketCardTemplate } from '@/types'
 import { Image } from 'expo-image'
 import { useEffect } from 'react'

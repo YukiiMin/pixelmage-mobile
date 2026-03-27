@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { ReadingMode, ReadingCard } from '@/types/tarot';
-import type { UserInventory } from '@/types/inventory';
+import type { UserInventory } from '@/types/my-cards';
 
 export type TarotPhase = 'SETUP' | 'SHUFFLING' | 'DRAWING' | 'REVEAL' | 'INTERPRET' | 'COMPLETE' | 'EXPIRED';
 

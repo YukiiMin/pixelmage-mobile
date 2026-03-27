@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated'
 import { useRouter } from 'expo-router'
-import type { UserInventory } from '@/types/inventory'
+import type { UserInventory } from '@/types/my-cards'
 import { CardThumbnail } from './CardThumbnail'
 
 interface Props {

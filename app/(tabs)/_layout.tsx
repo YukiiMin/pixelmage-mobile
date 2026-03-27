@@ -26,9 +26,12 @@ export default function TabLayout() {
         },
       }}
     >
+      {/* ── Global Redirect (Hidden) ────────────────────────── */}
+      <Tabs.Screen name="index" options={{ href: null }} />
+
       {/* ── Visible tabs ───────────────────────────────────────── */}
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => (
@@ -64,7 +67,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile/index"
+        name="profile"
         options={{
           title: 'Me',
           tabBarIcon: ({ color }) => (
@@ -94,10 +97,6 @@ export default function TabLayout() {
       {/* These exist in the (tabs) folder but must NOT appear as tabs */}
       <Tabs.Screen
         name="collections"
-        options={{ href: null, headerShown: false }}
-      />
-      <Tabs.Screen
-        name="profile/orders"
         options={{ href: null, headerShown: false }}
       />
     </Tabs>
