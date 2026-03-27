@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text, ActivityIndicator } from 'react-native'
+import { View, Text, ActivityIndicator , TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { DeviceMotion } from 'expo-sensors'
 import Animated, { useSharedValue, withSpring, useAnimatedStyle, useReducedMotion } from 'react-native-reanimated'
@@ -9,7 +9,6 @@ import { useUnlinkRequest } from '../hooks/useUnlinkRequest'
 import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { secureStore } from '@/api/secureStore'
 import { fonts, colors, rarityConfig } from '@/theme/index'
-import { TouchableOpacity } from 'react-native'
 
 export function CardDetailModal({ templateId }: { templateId: number }) {
   const [userId, setUserId] = useState<number | null>(null)
@@ -81,7 +80,7 @@ export function CardDetailModal({ templateId }: { templateId: number }) {
             borderRadius: 20,
             overflow: 'hidden',
           },
-          rarity.glow as any
+          rarity.glow as import('react-native').ViewStyle
         ]}
       >
         <Image 

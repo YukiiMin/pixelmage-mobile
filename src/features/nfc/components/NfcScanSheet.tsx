@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { useRouter } from 'expo-router'
-import { MotiView } from 'moti'
-import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated'
+import Animated, {
+  FadeInDown,
+  useReducedMotion,
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated'
 import * as Haptics from 'expo-haptics'
 import { useNfcStore } from '@/store/useNfcStore'
 import { useNfcScan } from '../hooks/useNfcScan'
@@ -17,10 +24,37 @@ interface Props {
 
 export function NfcScanSheet({ preScannedUid }: Props) {
   const router = useRouter()
-  const { phase, scannedUid, errorMessage, setPhase, setScannedUid } = useNfcStore()
+  const { phase, errorMessage, setPhase, setScannedUid } = useNfcStore()
   const { startIosScan, scanMutation, linkMutation, reset } = useNfcScan()
   const [showTutorial, setShowTutorial] = React.useState(Platform.OS === 'ios' && !preScannedUid)
   const reducedMotion = useReducedMotion()
+
+  // Radar pulse animation
+  const pulseScale = useSharedValue(1)
+  const pulseOpacity = useSharedValue(0.8)
+
+  useEffect(() => {
+    if (phase === 'scanning' && !reducedMotion) {
+      pulseScale.value = withRepeat(
+        withTiming(1.5, { duration: 1500, easing: Easing.out(Easing.ease) }),
+        -1,
+        false,
+      )
+      pulseOpacity.value = withRepeat(
+        withTiming(0, { duration: 1500, easing: Easing.out(Easing.ease) }),
+        -1,
+        false,
+      )
+    } else {
+      pulseScale.value = 1
+      pulseOpacity.value = 0.8
+    }
+  }, [phase, reducedMotion, pulseOpacity, pulseScale])
+
+  const radarStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulseScale.value }],
+    opacity: pulseOpacity.value,
+  }))
 
   useEffect(() => {
     const processPreScanned = async () => {
@@ -35,13 +69,13 @@ export function NfcScanSheet({ preScannedUid }: Props) {
 
           await scanMutation.mutateAsync({ uid: preScannedUid, userId })
           await linkMutation.mutateAsync({ uid: preScannedUid, userId })
-        } catch (error) {
+        } catch {
           // Handled in mutation error handler
         }
       }
     }
     processPreScanned()
-  }, [preScannedUid, phase])
+  }, [preScannedUid, phase, setPhase, setScannedUid, scanMutation, linkMutation])
 
   useEffect(() => {
     let interval: NodeJS.Timeout
@@ -74,16 +108,7 @@ export function NfcScanSheet({ preScannedUid }: Props) {
 
       {phase === 'scanning' && (
         <View style={styles.content}>
-          <MotiView
-            from={{ scale: 1, opacity: 0.8 }}
-            animate={{ scale: disabledAnimation ? 1 : 1.5, opacity: 0 }}
-            transition={{
-              type: 'timing',
-              duration: 1500,
-              loop: true,
-            }}
-            style={styles.radarPulse}
-          />
+          <Animated.View style={[styles.radarPulse, radarStyle]} />
           <Text style={styles.text}>Đang đọc thẻ...</Text>
         </View>
       )}
@@ -106,7 +131,6 @@ export function NfcScanSheet({ preScannedUid }: Props) {
             style={styles.button} 
             onPress={() => {
               reset()
-              // @ts-expect-error: Expo Router static generation fails to detect newly injected segment routes without an interactive bundler build cache.
               router.replace('/(tabs)/my-cards')
             }}
           >
@@ -124,7 +148,6 @@ export function NfcScanSheet({ preScannedUid }: Props) {
   )
 }
 
-const disabledAnimation = false
 
 const styles = StyleSheet.create({
   glassModal: {

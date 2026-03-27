@@ -1,11 +1,10 @@
-import { View, Text, FlatList, SectionList } from 'react-native'
+import { View, Text, SectionList } from 'react-native'
 import { Trophy } from 'lucide-react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { useAchievements } from '@/features/collections/hooks/useAchievements'
 import { useMyAchievements } from '@/features/collections/hooks/useMyAchievements'
 import { AchievementBadge } from './AchievementBadge'
 import { colors, fonts } from '@/theme/index'
-import type { Achievement } from '@/types'
 import type { AchievementStatus } from '@/types/collection'
 
 interface Props {
@@ -66,7 +65,7 @@ export function AchievementsList({ userId }: Props) {
   return (
     <SectionList
       sections={sections}
-      keyExtractor={(item, index) => `section-${index}`}
+      keyExtractor={(_item, index) => `section-${index}`}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ padding: 16 }}
       renderSectionHeader={({ section }) => (
@@ -81,7 +80,7 @@ export function AchievementsList({ userId }: Props) {
           entering={FadeInDown.delay(sectionIndex * 100).duration(400)}
           className="flex-row flex-wrap mb-4"
         >
-          {group.map((a, i) => (
+          {group.map((a, _i) => (
             <AchievementBadge
               key={a.achievementId}
               achievement={a}

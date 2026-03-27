@@ -3,6 +3,7 @@ import * as Haptics from 'expo-haptics'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNfcStore } from '@/store/useNfcStore'
 import { client, ApiError } from '@/api/client'
+import { ResponseBase } from '@/types/index'
 import { EP } from '@/api/endpoints'
 import { secureStore } from '@/api/secureStore'
 
@@ -12,12 +13,12 @@ export function useNfcScan() {
 
   const scanMutation = useMutation({
     mutationFn: ({ uid, userId }: { uid: string; userId: number }) =>
-      client.post<{ data: any }>(EP.NFC_SCAN(uid, userId)),
+      client.post<ResponseBase<void>>(EP.NFC_SCAN(uid, userId)),
   })
 
   const linkMutation = useMutation({
     mutationFn: ({ uid, userId }: { uid: string; userId: number }) =>
-      client.post<{ data: any }>(EP.NFC_LINK(uid, userId)),
+      client.post<ResponseBase<void>>(EP.NFC_LINK(uid, userId)),
     onSuccess: async () => {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
       queryClient.invalidateQueries({ queryKey: ['my-cards'] })
@@ -51,7 +52,7 @@ export function useNfcScan() {
       if (!userId) { return }
       await scanMutation.mutateAsync({ uid, userId })
       await linkMutation.mutateAsync({ uid, userId })
-    } catch (ex) {
+    } catch {
       setError('Không đọc được thẻ. Thử lại.')
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
     } finally {

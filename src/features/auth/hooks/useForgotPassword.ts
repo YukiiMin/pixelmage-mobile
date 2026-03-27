@@ -9,8 +9,8 @@ export function useForgotPassword() {
     onSuccess: () => {
       // Success state UI managed correctly
     },
-    onError: (error: ApiError) => {
-      // throw
+    onError: (_error: ApiError) => {
+      // Error state handled by isError flag in component
     },
   })
 }

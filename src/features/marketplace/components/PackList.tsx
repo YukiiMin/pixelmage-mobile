@@ -20,7 +20,6 @@ function PackRow({ pack, index }: PackRowProps) {
       <Pressable
         onPress={() => {
           router.push({
-            // @ts-expect-error dynamic route
             pathname: '/marketplace/[id]',
             params: { id: pack.packId },
           })

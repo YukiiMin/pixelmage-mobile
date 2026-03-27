@@ -25,7 +25,6 @@ export function CollectionList({ collections, progressData }: Props) {
           progress={progressMap[col.collectionId]}
           onPress={() => {
             router.push({
-              // @ts-expect-error: Expo Router static generation limitation
               pathname: '/collections/[id]',
               params: { id: col.collectionId }
             })

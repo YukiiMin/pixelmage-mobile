@@ -13,7 +13,6 @@ export function EmptyState() {
         Scan thẻ NFC vật lý để bắt đầu bộ sưu tập của bạn
       </Text>
       <TouchableOpacity
-        // @ts-expect-error: Expo Router static generation limitation
         onPress={() => router.push('/(modals)/nfc-scan')}
         className="px-6 py-3 rounded-full flex-row items-center border border-[#7F50B3] bg-[rgba(26,32,64,0.85)]"
       >

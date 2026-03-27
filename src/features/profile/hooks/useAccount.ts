@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { client } from '@/api/client'
 import { EP } from '@/api/endpoints'
-import { Account } from '@/types/account'
+import { ResponseBase, Account } from '@/types'
 
-interface ResponseBase<T> {
-  data: T
-  message: string
-  status: number
-}
-
+/**
+ * Mobile Account Detail Hook
+ * Fetches the full profile for a given user ID.
+ */
 export function useAccount(userId: number | null) {
   return useQuery({
     queryKey: ['account', userId],

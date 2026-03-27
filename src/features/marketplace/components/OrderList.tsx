@@ -33,7 +33,6 @@ function OrderRow({ order, index }: { order: Order; index: number }) {
       <Pressable
         onPress={() => {
           router.push({
-            // @ts-expect-error dynamic modal route
             pathname: '/(modals)/order-detail',
             params: { id: order.orderId },
           })

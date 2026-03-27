@@ -18,17 +18,16 @@ export function InterpretPanel({ sessionId }: { sessionId: number }) {
   const status = session?.status;
 
   useEffect(() => {
-    if (status === 'INTERPRETING') {
-      const timer = setTimeout(() => {
-        setTimeoutWarn(true);
-        if (retryCount < 2) {
-          setRetryCount((prev) => prev + 1);
-          queryClient.refetchQueries({ queryKey: ['tarot-interpret', sessionId] });
-        }
-      }, 60000); // 60s timeout guard
+    if (status !== 'INTERPRETING') return;
+    const timer = setTimeout(() => {
+      setTimeoutWarn(true);
+      if (retryCount < 2) {
+        setRetryCount((prev) => prev + 1);
+        queryClient.refetchQueries({ queryKey: ['tarot-interpret', sessionId] });
+      }
+    }, 60000); // 60s timeout guard
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, [status, retryCount, sessionId, queryClient]);
 
   const loadingOpacity = useSharedValue(0.5);
@@ -53,7 +52,6 @@ export function InterpretPanel({ sessionId }: { sessionId: number }) {
 
   const handleReturn = () => {
     clearSession();
-    // @ts-expect-error: Expo Router static paths typing limitation
     router.replace('/(tabs)/tarot');
   };
 

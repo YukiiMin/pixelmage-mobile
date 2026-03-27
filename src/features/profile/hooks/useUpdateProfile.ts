@@ -2,26 +2,26 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { client, ApiError } from '@/api/client'
 import { EP } from '@/api/endpoints'
 import { useToastStore } from '@/store/useToastStore'
-import { Account } from '@/types/account'
+import { ResponseBase, Account, UpdateProfileRequestDTO } from '@/types'
 
-interface ResponseBase<T> {
-  data: T
-  message: string
-  status: number
-}
-
+/**
+ * Mobile Profile Update Hook
+ * Updates basic account info (e.g. name).
+ */
 export function useUpdateProfile(userId: number) {
   const queryClient = useQueryClient()
+  const { showToast } = useToastStore()
+
   return useMutation({
-    mutationFn: (data: { name: string }) =>
+    mutationFn: (data: UpdateProfileRequestDTO) =>
       client.put<ResponseBase<Account>>(EP.ACCOUNT(userId), data).then((r) => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['account', userId] })
-      useToastStore.getState().showToast('Cập nhật thành công', 'success')
+      showToast('Cập nhật thành công', 'success')
     },
     onError: (error: ApiError) => {
       const message = error.data?.message ?? error.message ?? 'Cập nhật thất bại'
-      useToastStore.getState().showToast(message, 'error')
+      showToast(message, 'error')
     },
   })
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { client, ApiError } from '@/api/client'
+import { client } from '@/api/client'
 import { EP } from '@/api/endpoints'
 import { CardInfo, CardRequestDTO } from '@/types/card'
 

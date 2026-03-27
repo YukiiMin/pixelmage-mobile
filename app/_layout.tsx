@@ -6,6 +6,7 @@ import { Slot, useRouter, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
 import { secureStore } from '@/api/secureStore'
+import { sessionExpiredBus } from '@/api/client'
 import { StatusBar } from 'expo-status-bar'
 import { CustomToast } from '@/components/common/CustomToast'
 
@@ -34,6 +35,19 @@ export default function RootLayout() {
     })
   }, [])
 
+  // ── Session-expired handler ──────────────────────────────────────────────
+  // When the refresh token is invalid/expired, client.ts clears all tokens
+  // and emits this event. We force-navigate to login from here so the handler
+  // works regardless of which screen is currently mounted.
+  useEffect(() => {
+    const unsub = sessionExpiredBus.subscribe(() => {
+      setIsAuthenticated(false)
+      router.replace('/(auth)/login')
+    })
+    return unsub
+  }, [router])
+  // ────────────────────────────────────────────────────────────────────────
+
   useEffect(() => {
     if (error) throw error
   }, [error])
@@ -45,13 +59,12 @@ export default function RootLayout() {
       const inAuthGroup = (segments[0] as string) === '(auth)'
       
       if (!isAuthenticated && !inAuthGroup) {
-        // @ts-expect-error: Expo Router static generation fails to detect newly injected segment routes without an interactive bundler build cache.
         router.replace('/(auth)/login')
       } else if (isAuthenticated && inAuthGroup) {
         router.replace('/(tabs)')
       }
     }
-  }, [loaded, isAuthenticated, segments])
+  }, [loaded, isAuthenticated, segments, router])
 
   if (!loaded || isAuthenticated === null) {
     return null

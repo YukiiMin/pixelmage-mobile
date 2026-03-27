@@ -50,7 +50,6 @@ export default function TarotSetupClient() {
         onSuccess: (session) => {
           // If YOUR_DECK, drawing actually happens automatically via TarotSessionClient OR we route and draw there.
           router.push({
-            // @ts-expect-error: Expo Router static paths typing limitation
             pathname: '/(tabs)/tarot/reading',
             params: { sessionId: String(session.sessionId) },
           });
@@ -78,8 +77,7 @@ export default function TarotSetupClient() {
         </Text>
         <Pressable
           onPress={() => {
-             // @ts-expect-error: Expo Router static paths typing limitation
-             router.push('/(tabs)/shop');
+          router.push('/(tabs)/marketplace');
           }}
           style={{ backgroundColor: colors.primary }}
           className="py-4 px-8 rounded-xl"
@@ -113,7 +111,7 @@ export default function TarotSetupClient() {
         {mode === 'YOUR_DECK' && selectedSpread && (
           <CardPicker
             spreadPositionCount={selectedSpread.positionCount}
-            onConfirm={(ids) => {
+            onConfirm={(_ids) => {
               // Confirm is handled by CreateSession + draw mutate logic.
               // We'll keep it simple and just enable Start button when IDs are enough
             }}

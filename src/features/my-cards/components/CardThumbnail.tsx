@@ -59,7 +59,7 @@ export function CardThumbnail({ card, template, onPress }: Props) {
             borderWidth: isLegendary ? 2 : 1,
             backgroundColor: 'rgba(26, 32, 64, 0.85)',
           },
-          rarity.glow && !isLegendary ? (rarity.glow as any) : {},
+          rarity.glow && !isLegendary ? (rarity.glow as import('react-native').ViewStyle) : {},
           animatedGlowStyle,
         ]}
         className="rounded-xl overflow-hidden aspect-[2.5/3.5] bg-[#0d1126]"

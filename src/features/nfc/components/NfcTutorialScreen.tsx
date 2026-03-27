@@ -1,8 +1,8 @@
 import { colors, fonts } from '@/theme/index'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { MotiView } from 'moti'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 interface Props {
   onComplete: () => void
@@ -34,10 +34,8 @@ export function NfcTutorialScreen({ onComplete }: Props) {
     <View style={styles.container}>
       <Text style={styles.heading}>Hướng dẫn quét thẻ</Text>
 
-      <MotiView
-        from={{ opacity: 0, translateY: 20 }}
-        animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: 1000 }}
+      <Animated.View
+        entering={FadeInDown.duration(1000)}
         style={styles.animationContainer}
       >
         <Text style={styles.stepText}>1. Chọn Bắt đầu quét</Text>
@@ -45,7 +43,7 @@ export function NfcTutorialScreen({ onComplete }: Props) {
         <Text style={styles.stepText}>
           3. Giữ yên đến khi nhận thông báo thành công
         </Text>
-      </MotiView>
+      </Animated.View>
 
       <TouchableOpacity style={styles.button} onPress={handleUnderstand}>
         <Text style={styles.buttonText}>Đã hiểu</Text>

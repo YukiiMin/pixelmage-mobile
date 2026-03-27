@@ -4,25 +4,23 @@ import Animated, { FadeInUp, FadeOutUp, useReducedMotion } from 'react-native-re
 import * as Haptics from 'expo-haptics'
 import { useToastStore } from '@/store/useToastStore'
 import { colors, fonts } from '@/theme/index'
-import { IconSymbol } from '@/components/ui/icon-symbol'
+import { IconSymbol } from './IconSymbol'
 
 export function CustomToast() {
   const { visible, message, type, hideToast } = useToastStore()
   const prefersReduced = useReducedMotion()
 
   useEffect(() => {
-    if (visible) {
-      if (type === 'success') {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-      } else if (type === 'error') {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
-      }
-      
-      const timer = setTimeout(() => {
-        hideToast()
-      }, 3000)
-      return () => clearTimeout(timer)
+    if (!visible) return
+    if (type === 'success') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+    } else if (type === 'error') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
     }
+    const timer = setTimeout(() => {
+      hideToast()
+    }, 3000)
+    return () => clearTimeout(timer)
   }, [visible, type, hideToast])
 
   if (!visible) return null

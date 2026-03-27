@@ -16,7 +16,7 @@ export function useAndroidNfcDeepLink() {
     })
     
     return () => sub.remove()
-  }, [])
+  }, [router])
 }
 
 function handleNfcUrl(url: string, router: ReturnType<typeof useRouter>) {
@@ -27,10 +27,8 @@ function handleNfcUrl(url: string, router: ReturnType<typeof useRouter>) {
     const uid = pathParts[1]
     secureStore.get('accessToken').then((token) => {
       if (!token) {
-        // @ts-expect-error: Expo Router static generation fails to detect newly injected segment routes without an interactive bundler build cache.
         router.replace({ pathname: '/(auth)/login', params: { returnUid: uid } })
       } else {
-        // @ts-expect-error: Expo Router static generation fails to detect newly injected segment routes without an interactive bundler build cache.
         router.push({ pathname: '/(modals)/nfc-scan', params: { uid } })
       }
     })

@@ -13,7 +13,6 @@ function StoryRow({ story, index }: { story: Story; index: number }) {
   const handlePress = () => {
     if (isLocked) return
     router.push({
-      // @ts-expect-error: dynamic route
       pathname: '/collections/stories/[id]',
       params: { id: story.storyId },
     })

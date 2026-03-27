@@ -1,7 +1,6 @@
 import { View } from 'react-native'
-import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, withSpring , useSharedValue } from 'react-native-reanimated'
 import { useEffect } from 'react'
-import { useSharedValue } from 'react-native-reanimated'
 
 interface Props {
   value: number

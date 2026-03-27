@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link } from 'expo-router'
+import { ApiError } from '@/api/client'
 import { useForgotPassword } from '../hooks/useForgotPassword'
 import { fonts, colors } from '@/theme/index'
 
@@ -26,8 +27,8 @@ export function ForgotPasswordForm() {
       onSuccess: () => {
         setSuccess(true)
       },
-      onError: (err: any) => {
-        Alert.alert('Lỗi', err.message || 'Có lỗi xảy ra, vui lòng thử lại.')
+      onError: (err: ApiError) => {
+        Alert.alert('Lỗi', err.data?.message || err.message || 'Có lỗi xảy ra, vui lòng thử lại.')
       }
     })
   }
@@ -43,7 +44,6 @@ export function ForgotPasswordForm() {
           <Text style={{ fontFamily: fonts.bodyMedium, fontSize: 16, color: colors.success, textAlign: 'center', marginBottom: 24 }}>
             Đường dẫn đặt lại mật khẩu đã được gửi đến email của bạn.
           </Text>
-          {/* @ts-expect-error: Expo Router static generation fails to detect newly injected segment routes without an interactive bundler build cache. */}
           <Link href="/(auth)/login" asChild>
             <TouchableOpacity
               style={{
@@ -111,7 +111,6 @@ export function ForgotPasswordForm() {
           </TouchableOpacity>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            {/* @ts-expect-error: Expo Router static generation fails to detect newly injected segment routes without an interactive bundler build cache. */}
             <Link href="/(auth)/login" asChild>
               <TouchableOpacity>
                 <Text style={{ color: colors.textMuted, fontFamily: fonts.bodyMedium }}>Quay lại đăng nhập</Text>

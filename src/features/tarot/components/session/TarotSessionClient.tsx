@@ -61,7 +61,6 @@ export default function TarotSessionClient({ sessionId }: TarotSessionClientProp
         <Text className="font-heading text-2xl text-error mb-4">Session đã hết hạn.</Text>
         <Pressable
           onPress={() => {
-            // @ts-expect-error: Expo Router static paths typing limitation
             router.replace('/(tabs)/tarot');
           }}
           style={{ backgroundColor: 'rgba(44, 51, 66, 0.5)' }}

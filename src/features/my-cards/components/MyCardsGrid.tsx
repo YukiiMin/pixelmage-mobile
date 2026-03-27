@@ -26,7 +26,6 @@ export function MyCardsGrid({ cards }: Props) {
               card={card} 
               onPress={() => {
                 router.push({
-                  // @ts-expect-error: dynamic parametric route resolution
                   pathname: '/(modals)/card-detail',
                   params: { templateId: card.cardTemplate.templateId }
                 })

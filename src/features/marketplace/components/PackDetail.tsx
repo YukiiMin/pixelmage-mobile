@@ -4,6 +4,8 @@ import { Image } from 'expo-image'
 import * as Linking from 'expo-linking'
 import { ArrowLeft, ShoppingCart } from 'lucide-react-native'
 import { usePackDetail } from '@/features/marketplace/hooks/usePackDetail'
+import { useCheckoutToken } from '@/features/marketplace/hooks/useCheckoutToken'
+import { useToastStore } from '@/store/useToastStore'
 import { colors, fonts, rarityConfig } from '@/theme/index'
 
 interface Props {
@@ -20,6 +22,8 @@ const DROP_RATES = [
 export function PackDetail({ packId }: Props) {
   const router = useRouter()
   const { data: pack, isLoading, isError } = usePackDetail(packId)
+  const { mutateAsync: getCheckoutToken, isPending: isCheckingOut } = useCheckoutToken()
+  const { showToast } = useToastStore()
 
   if (isLoading) {
     return (
@@ -44,10 +48,27 @@ export function PackDetail({ packId }: Props) {
 
   const isSoldOut = pack.status === 'SOLD'
 
-  const onBuyPress = () => {
-    // Navigate to web URL for checkout
-    const baseUrl = process.env.EXPO_PUBLIC_WEB_BASE_URL ?? process.env.EXPO_PUBLIC_API_BASE_URL ?? 'https://pixelmage.vercel.app'
-    Linking.openURL(`${baseUrl}/marketplace/packs/${pack.packId}`)
+  const onBuyPress = async () => {
+    try {
+      // 1. Exchange stored JWT for a short-lived, one-use checkout token
+      const ct = await getCheckoutToken()
+
+      // 2. Build the checkout URL — encodeURIComponent is REQUIRED because
+      //    tokens contain +/= chars that break URL parsing if unescaped.
+      const baseUrl = (process.env.EXPO_PUBLIC_WEB_BASE_URL ?? '').replace(/\/$/, '')
+      const url = `${baseUrl}/checkout/${pack.packId}?ct=${encodeURIComponent(ct)}`
+
+      // 3. Guard: verify the device can actually open a browser
+      const canOpen = await Linking.canOpenURL(url)
+      if (!canOpen) {
+        showToast('Không thể mở trình duyệt. Vui lòng thử lại.', 'error')
+        return
+      }
+
+      await Linking.openURL(url)
+    } catch {
+      showToast('Không thể khởi tạo phiên thanh toán. Vui lòng thử lại.', 'error')
+    }
   }
 
   return (
@@ -115,17 +136,23 @@ export function PackDetail({ packId }: Props) {
         {/* CTA */}
         <Pressable
           onPress={onBuyPress}
-          disabled={isSoldOut}
+          disabled={isSoldOut || isCheckingOut}
           className={`flex-row items-center justify-center p-4 rounded-xl ${
-            isSoldOut ? 'bg-slate-700' : 'bg-[#D4B857]'
+            isSoldOut || isCheckingOut ? 'bg-slate-700' : 'bg-[#D4B857]'
           }`}
         >
-          <ShoppingCart size={20} color={isSoldOut ? colors.textMuted : colors.background} className="mr-2" />
-          <Text
-            style={{ fontFamily: fonts.bodyMedium, color: isSoldOut ? colors.textMuted : colors.background, fontSize: 16 }}
-          >
-            {isSoldOut ? 'HẾT HÀNG' : 'MUA PACK (WEB)'}
-          </Text>
+          {isCheckingOut ? (
+            <ActivityIndicator size="small" color={colors.background} />
+          ) : (
+            <>
+              <ShoppingCart size={20} color={isSoldOut ? colors.textMuted : colors.background} className="mr-2" />
+              <Text
+                style={{ fontFamily: fonts.bodyMedium, color: isSoldOut ? colors.textMuted : colors.background, fontSize: 16 }}
+              >
+                {isSoldOut ? 'HẾT HÀNG' : 'MUA PACK (WEB)'}
+              </Text>
+            </>
+          )}
         </Pressable>
         <Text style={{ fontFamily: fonts.body, color: colors.textMuted, fontSize: 12, textAlign: 'center' }} className="mt-3">
           Sẽ chuyển hướng tới giao diện Web để thanh toán an toàn

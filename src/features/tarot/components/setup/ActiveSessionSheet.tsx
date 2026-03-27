@@ -37,7 +37,6 @@ export function ActiveSessionSheet({ visible, activeSessionId, onClose }: Active
             <Pressable
               onPress={() => {
                 onClose();
-                // @ts-expect-error: Expo Router static paths typing limitation
                 router.push({ pathname: '/(tabs)/tarot/reading', params: { sessionId: String(activeSessionId) }});
               }}
               style={{ backgroundColor: '#D4B857' }}
