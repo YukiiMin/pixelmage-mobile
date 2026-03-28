@@ -3,6 +3,7 @@ module.exports = {
   // Thay đổi đường dẫn này nếu bạn có thêm các thư mục khác chứa giao diện
   content: [
     './app/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',
     './components/**/*.{js,jsx,ts,tsx}',
     './hooks/**/*.{js,jsx,ts,tsx}',
   ],

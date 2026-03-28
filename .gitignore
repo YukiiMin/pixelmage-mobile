@@ -43,3 +43,5 @@ app-example
 /android
 
 .env
+tsc_errors.txt
+typescript_errors.log
