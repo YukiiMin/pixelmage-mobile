@@ -22,11 +22,11 @@ export function CollectionsPageClient() {
   const isLoading = loadingColls || loadingProgs
 
   return (
-    <ScrollView className="flex-1 bg-[#0A0D1E]">
-      <View className="py-8 px-4">
+    <ScrollView className="flex-1" style={{ backgroundColor: colors.background }}>
+      <View className="px-4 pb-8 pt-10">
         <Text
           style={{ fontFamily: fonts.heading, color: colors.primary }}
-          className="text-3xl text-center mb-6"
+          className="mb-6 text-center text-4xl"
         >
           Bộ Sưu Tập
         </Text>
@@ -41,6 +41,26 @@ export function CollectionsPageClient() {
 
         {!isLoading && collections && progresses && (
           <CollectionList collections={collections} progressData={progresses} />
+        )}
+
+        {!isLoading && collections && progresses && collections.length === 0 && (
+          <View
+            className="rounded-2xl border px-6 py-8"
+            style={{ backgroundColor: colors.surface, borderColor: colors.borderMuted }}
+          >
+            <Text
+              className="text-center text-xl"
+              style={{ fontFamily: fonts.heading, color: colors.text }}
+            >
+              Chưa có bộ sưu tập
+            </Text>
+            <Text
+              className="mt-2 text-center"
+              style={{ fontFamily: fonts.body, color: colors.textMuted }}
+            >
+              Mua pack để bắt đầu hành trình sưu tầm thẻ.
+            </Text>
+          </View>
         )}
       </View>
     </ScrollView>

@@ -78,13 +78,15 @@ export function NfcScanSheet({ preScannedUid }: Props) {
   }, [preScannedUid, phase, setPhase, setScannedUid, scanMutation, linkMutation])
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: ReturnType<typeof setInterval> | undefined
     if (phase === 'scanning' && Platform.OS === 'ios') {
       interval = setInterval(() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
       }, 1500)
     }
-    return () => clearInterval(interval)
+    return () => {
+      if (interval) clearInterval(interval)
+    }
   }, [phase])
 
   if (showTutorial) {

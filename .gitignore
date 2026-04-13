@@ -45,3 +45,9 @@ app-example
 .env
 tsc_errors.txt
 typescript_errors.log
+
+.github
+.vscode
+.agents
+
+skills-lock.json

@@ -25,8 +25,7 @@ export function CollectionList({ collections, progressData }: Props) {
           progress={progressMap[col.collectionId]}
           onPress={() => {
             router.push({
-              // @ts-expect-error: Grouped route path mismatch
-              pathname: '/(tabs)/collections/[id]',
+              pathname: '/collections/[id]',
               params: { id: col.collectionId.toString() }
             })
           }}

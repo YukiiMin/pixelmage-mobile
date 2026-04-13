@@ -8,6 +8,7 @@ import { ResponseBase, AuthResponseData, GoogleAuthRequestDTO } from '@/types'
 import * as Google from 'expo-auth-session/providers/google'
 import * as WebBrowser from 'expo-web-browser'
 import { useEffect } from 'react'
+import { Platform } from 'react-native'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -20,11 +21,14 @@ WebBrowser.maybeCompleteAuthSession()
 export function useGoogleAuth() {
   const router = useRouter()
   const { showToast } = useToastStore()
+  const webClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
+  const isConfigured = Platform.OS !== 'web' || Boolean(webClientId)
 
-  const [, response, promptAsync] = Google.useAuthRequest({
+  const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
     iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    // Keep web bundle stable when env var is missing; signIn() blocks usage below.
+    webClientId: webClientId ?? 'MISSING_WEB_CLIENT_ID',
   })
 
   const verifyMutation = useMutation({
@@ -71,11 +75,17 @@ export function useGoogleAuth() {
   }, [response, verifyMutation])
 
   const signIn = () => {
+    if (!isConfigured) {
+      showToast('Thiếu EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID cho đăng nhập Google trên web', 'error')
+      return
+    }
+    if (!request || verifyMutation.isPending) return
     void promptAsync()
   }
 
   return { 
     signIn, 
-    isPending: verifyMutation.isPending || !response 
+    isPending: verifyMutation.isPending,
+    isConfigured,
   }
 }

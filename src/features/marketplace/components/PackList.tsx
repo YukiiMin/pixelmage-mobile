@@ -24,14 +24,19 @@ function PackRow({ pack, index }: PackRowProps) {
             params: { id: pack.packId },
           })
         }}
-        className={`bg-slate-800/60 rounded-xl overflow-hidden mb-4 border ${
-          isSoldOut ? 'border-slate-700/50' : 'border-[#D4B857]/30'
-        }`}
-        style={{ opacity: isSoldOut ? 0.6 : 1 }}
+        className="mb-4 overflow-hidden rounded-xl border"
+        style={{
+          backgroundColor: colors.surface,
+          borderColor: isSoldOut ? colors.borderMuted : colors.primaryDark,
+          opacity: isSoldOut ? 0.6 : 1,
+        }}
       >
         <Image
-          source={pack.imageUrl ? { uri: pack.imageUrl } : require('@/assets/images/placeholder.jpg')}
-          className="w-full h-32 bg-slate-700"
+          source={
+            pack.imageUrl ? { uri: pack.imageUrl } : require('../../../../assets/images/placeholder.jpg')
+          }
+          className="h-32 w-full"
+          style={{ backgroundColor: colors.border }}
           contentFit="cover"
         />
         <View className="p-4">
@@ -43,13 +48,16 @@ function PackRow({ pack, index }: PackRowProps) {
               {pack.name}
             </Text>
             {isSoldOut ? (
-              <View className="bg-slate-700 px-2 py-1 rounded">
+              <View className="rounded px-2 py-1" style={{ backgroundColor: colors.border }}>
                 <Text style={{ fontFamily: fonts.stats, color: colors.textMuted, fontSize: 10 }}>
                   HẾT HÀNG
                 </Text>
               </View>
             ) : pack.status === 'RESERVED' ? (
-              <View className="bg-[#7F50B3]/20 border border-[#7F50B3] px-2 py-1 rounded">
+              <View
+                className="rounded border px-2 py-1"
+                style={{ backgroundColor: colors.secondaryLight, borderColor: colors.secondary }}
+              >
                 <Text style={{ fontFamily: fonts.stats, color: colors.secondary, fontSize: 10 }}>
                   LIMITED
                 </Text>
@@ -94,7 +102,7 @@ export function PackList() {
       data={packs}
       keyExtractor={(item) => String(item.packId)}
       renderItem={({ item, index }) => <PackRow pack={item} index={index} />}
-      contentContainerStyle={{ padding: 16 }}
+      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 24 }}
       showsVerticalScrollIndicator={false}
     />
   )

@@ -9,6 +9,7 @@ import { secureStore } from '@/api/secureStore'
 import { sessionExpiredBus } from '@/api/client'
 import { StatusBar } from 'expo-status-bar'
 import { CustomToast } from '@/components/common/CustomToast'
+import { useAndroidNfcDeepLink } from '@/features/nfc/hooks/useAndroidNfcDeepLink'
 
 import './global.css'
 
@@ -28,12 +29,35 @@ export default function RootLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const segments = useSegments()
   const router = useRouter()
+  useAndroidNfcDeepLink()
 
   useEffect(() => {
-    secureStore.get('accessToken').then(token => {
-      setIsAuthenticated(!!token)
-    })
-  }, [])
+    if (!loaded) return
+
+    let isCancelled = false
+
+    const syncAuthAndRedirect = async () => {
+      const token = await secureStore.get('accessToken')
+      if (isCancelled) return
+
+      const authenticated = !!token
+      setIsAuthenticated(authenticated)
+
+      const inAuthGroup = (segments[0] as string) === '(auth)'
+
+      if (!authenticated && !inAuthGroup) {
+        router.replace('/(auth)/login')
+      } else if (authenticated && inAuthGroup) {
+        router.replace('/(tabs)')
+      }
+    }
+
+    void syncAuthAndRedirect()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [loaded, segments, router])
 
   // ── Session-expired handler ──────────────────────────────────────────────
   // When the refresh token is invalid/expired, client.ts clears all tokens
@@ -55,16 +79,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded && isAuthenticated !== null) {
       SplashScreen.hideAsync()
-      
-      const inAuthGroup = (segments[0] as string) === '(auth)'
-      
-      if (!isAuthenticated && !inAuthGroup) {
-        router.replace('/(auth)/login')
-      } else if (isAuthenticated && inAuthGroup) {
-        router.replace('/(tabs)')
-      }
     }
-  }, [loaded, isAuthenticated, segments, router])
+  }, [loaded, isAuthenticated])
 
   if (!loaded || isAuthenticated === null) {
     return null

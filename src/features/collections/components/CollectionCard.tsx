@@ -16,19 +16,23 @@ export function CollectionCard({ collection, progress, onPress }: Props) {
   return (
     <Pressable onPress={onPress} className="mb-4">
       <View 
-        className="p-4 rounded-xl relative"
+        className="relative rounded-2xl p-5"
         style={{
-          backgroundColor: 'rgba(26, 32, 64, 0.85)',
+          backgroundColor: colors.surface,
           borderColor: isCompleted ? colors.primary : colors.border,
           borderWidth: 1,
         }}
       >
-        <Text style={{ fontFamily: fonts.heading, color: isCompleted ? colors.primary : colors.text }} className="text-xl">
+        <Text
+          style={{ fontFamily: fonts.heading, color: isCompleted ? colors.primary : colors.text }}
+          className="text-[30px]"
+          numberOfLines={1}
+        >
           {collection.name}
         </Text>
         
         {isCompleted && (
-          <View className="absolute top-4 right-4 bg-[#D4B857] px-2 py-1 rounded-sm">
+          <View className="absolute right-4 top-4 rounded-md px-2 py-1" style={{ backgroundColor: colors.primary }}>
             <Text style={{ fontFamily: fonts.stats, color: colors.background }} className="text-xs font-bold uppercase">
               ✓ Hoàn thành
             </Text>
@@ -40,7 +44,7 @@ export function CollectionCard({ collection, progress, onPress }: Props) {
           max={collection.totalCards}
           color={isCompleted ? colors.primary : colors.accent}
         />
-        <Text style={{ fontFamily: fonts.stats, color: colors.textMuted }} className="text-xs">
+        <Text style={{ fontFamily: fonts.stats, color: colors.textMuted }} className="mt-1 text-xs">
           {ownedCards}/{collection.totalCards} thẻ
         </Text>
       </View>

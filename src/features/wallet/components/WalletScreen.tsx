@@ -25,10 +25,10 @@ export function WalletScreen({ userId }: { userId: number }) {
   const canExchange = balance >= 1000
 
   return (
-    <ScrollView className="flex-1 px-4 py-6">
+    <ScrollView className="flex-1 px-4 py-6" style={{ backgroundColor: colors.background }}>
       <View
-        className="rounded-xl border border-border/50 p-6 items-center mb-6"
-        style={{ backgroundColor: 'rgba(26, 32, 64, 0.85)' }}
+        className="mb-6 items-center rounded-2xl border border-border/50 p-6"
+        style={{ backgroundColor: colors.surface }}
       >
         <Text style={{ fontFamily: fonts.body, color: colors.textMuted }} className="text-sm mb-2 uppercase tracking-wide">
           Số dư PixelMage
@@ -56,8 +56,8 @@ export function WalletScreen({ userId }: { userId: number }) {
         vouchers.map((v) => (
           <View
             key={v.voucherId}
-            className="rounded-xl border border-border/50 p-4 mb-3"
-            style={{ backgroundColor: 'rgba(26, 32, 64, 0.6)' }}
+            className="mb-3 rounded-2xl border border-border/50 p-4"
+            style={{ backgroundColor: colors.surface }}
           >
             <View className="flex-row justify-between items-center mb-2">
               <Text style={{ fontFamily: fonts.bodyMedium, color: colors.text }} className="text-lg">

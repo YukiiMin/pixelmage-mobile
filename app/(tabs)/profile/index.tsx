@@ -45,13 +45,14 @@ export default function ProfileScreen() {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 18,
+        minHeight: 56,
+        paddingVertical: 16,
         paddingHorizontal: 20,
-        backgroundColor: 'rgba(26, 32, 64, 0.6)',
+        backgroundColor: colors.surface,
         borderRadius: 16,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.05)',
+        borderColor: colors.borderMuted,
       }}
     >
       <IconSymbol name={icon} size={22} color={colors.primary} />
@@ -70,20 +71,20 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ paddingTop: 80, paddingHorizontal: 24, paddingBottom: 40 }}>
+      <View style={{ paddingTop: 64, paddingHorizontal: 24, paddingBottom: 40 }}>
         
         {/* Header / Avatar Placeholder */}
         <View style={{ alignItems: 'center', marginBottom: 32 }}>
           <View style={{
             width: 100, height: 100, borderRadius: 50,
-            backgroundColor: 'rgba(212, 184, 87, 0.1)',
+            backgroundColor: 'rgba(212, 184, 87, 0.14)',
             borderWidth: 2, borderColor: colors.primary,
             alignItems: 'center', justifyContent: 'center',
             marginBottom: 16
           }}>
             <IconSymbol name="person.fill" size={50} color={colors.primary} />
           </View>
-          <Text style={{ fontFamily: fonts.heading, fontSize: 28, color: colors.text }}>
+          <Text style={{ fontFamily: fonts.heading, fontSize: 44, lineHeight: 48, color: colors.text }}>
             {account?.name || 'User'}
           </Text>
           <Text style={{ fontFamily: fonts.body, color: colors.textMuted, marginTop: 4 }}>
@@ -95,7 +96,7 @@ export default function ProfileScreen() {
         <View>
           <MenuLink title="Ví PixelMage" icon="creditcard.fill" href="/(tabs)/profile/wallet" />
           <MenuLink title="Lịch sử đơn hàng" icon="list.bullet.rectangle.fill" href="/(tabs)/profile/orders" />
-          <MenuLink title="Cài đặt tài khoản" icon="gearshape.fill" href="/(tabs)/profile/settings" />
+          <MenuLink title="Cài đặt tài khoản" icon="gearshape.fill" href="/(tabs)/profile/wallet" />
         </View>
 
         {/* Logout */}
@@ -106,7 +107,7 @@ export default function ProfileScreen() {
             paddingVertical: 18,
             alignItems: 'center',
             borderWidth: 1,
-            borderColor: 'rgba(235, 87, 87, 0.2)',
+            borderColor: colors.error,
             borderRadius: 16
           }}
         >

@@ -41,20 +41,31 @@ export default function MarketplaceScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <View className="px-5 pt-12 pb-2 border-b border-border shadow-sm" style={{ backgroundColor: colors.surface }}>
-        <Text style={{ fontFamily: fonts.heading, color: colors.primary, fontSize: 24, paddingBottom: 10 }}>Cửa hàng</Text>
-        <View className="flex-row mt-2">
+      <View className="border-b border-border px-4 pb-3 pt-10" style={{ backgroundColor: colors.surface }}>
+        <Text
+          style={{ fontFamily: fonts.heading, color: colors.primary, fontSize: 40, lineHeight: 44 }}
+          className="pb-3"
+        >
+          Cửa hàng
+        </Text>
+        <View className="mt-1 flex-row">
           <Pressable 
             onPress={() => setTab('PACKS')}
-            className={`flex-1 py-2 items-center border-b-2 ${tab === 'PACKS' ? 'border-[#D4B857]' : 'border-transparent'}`}
+            style={{ borderBottomColor: tab === 'PACKS' ? colors.primary : 'transparent', borderBottomWidth: 2 }}
+            className="flex-1 items-center py-2"
           >
-            <Text style={{ fontFamily: fonts.stats, color: tab === 'PACKS' ? colors.primary : colors.textMuted }}>PACKS</Text>
+            <Text style={{ fontFamily: fonts.stats, color: tab === 'PACKS' ? colors.primary : colors.textMuted, fontSize: 14 }}>
+              PACKS
+            </Text>
           </Pressable>
           <Pressable 
             onPress={() => setTab('CARDS')}
-            className={`flex-1 py-2 items-center border-b-2 ${tab === 'CARDS' ? 'border-[#D4B857]' : 'border-transparent'}`}
+            style={{ borderBottomColor: tab === 'CARDS' ? colors.primary : 'transparent', borderBottomWidth: 2 }}
+            className="flex-1 items-center py-2"
           >
-            <Text style={{ fontFamily: fonts.stats, color: tab === 'CARDS' ? colors.primary : colors.textMuted }}>DANH MỤC THẺ</Text>
+            <Text style={{ fontFamily: fonts.stats, color: tab === 'CARDS' ? colors.primary : colors.textMuted, fontSize: 14 }}>
+              DANH MỤC THẺ
+            </Text>
           </Pressable>
         </View>
       </View>

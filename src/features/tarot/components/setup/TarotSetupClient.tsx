@@ -12,7 +12,7 @@ import { ModeToggle } from './ModeToggle';
 import { QuestionInput } from './QuestionInput';
 import { CardPicker } from './CardPicker';
 import { ActiveSessionSheet } from './ActiveSessionSheet';
-import { colors } from '@/theme/index';
+import { colors, fonts } from '@/theme/index';
 
 export default function TarotSetupClient() {
   const router = useRouter();
@@ -60,7 +60,7 @@ export default function TarotSetupClient() {
 
   if (!userId) {
     return (
-      <View className="flex-1 bg-background justify-center items-center">
+      <View className="flex-1 justify-center items-center" style={{ backgroundColor: colors.background }}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -68,11 +68,11 @@ export default function TarotSetupClient() {
 
   if (!canRead && usedGuestToday && !hasCards) {
     return (
-      <View className="flex-1 bg-background justify-center items-center px-4">
-        <Text className="font-heading text-xl text-primary mb-4 text-center">
+      <View className="flex-1 justify-center items-center px-4" style={{ backgroundColor: colors.background }}>
+        <Text className="mb-4 text-center text-xl" style={{ color: colors.primary, fontFamily: fonts.heading }}>
           Bạn đã dùng hết lượt trải bài miễn phí hôm nay
         </Text>
-        <Text className="font-body text-text/80 mb-6 text-center">
+        <Text className="mb-6 text-center" style={{ color: colors.textMuted, fontFamily: fonts.body }}>
           Vui lòng mua thêm thẻ Tarot để tiếp tục sử dụng tính năng này không giới hạn, hoặc quay lại vào ngày mai!
         </Text>
         <Pressable
@@ -82,19 +82,25 @@ export default function TarotSetupClient() {
           style={{ backgroundColor: colors.primary }}
           className="py-4 px-8 rounded-xl"
         >
-          <Text className="font-body font-medium text-background">Mua Pack Thẻ</Text>
+          <Text style={{ color: colors.background, fontFamily: fonts.bodyMedium }}>Mua Pack Thẻ</Text>
         </Pressable>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-[#0A0D1E]">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        <Text className="font-heading text-3xl text-primary text-center mt-6 mb-2">
+        <Text
+          className="mt-10 text-center text-4xl"
+          style={{ color: colors.primary, fontFamily: fonts.heading }}
+        >
           Hỏi Các Vì Sao
         </Text>
-        <Text className="font-body text-text/80 text-center px-4 mb-6">
+        <Text
+          className="mb-6 px-4 text-center"
+          style={{ color: colors.textMuted, fontFamily: fonts.body }}
+        >
           Chọn một trải bài và nhập câu hỏi để bắt đầu
         </Text>
 
@@ -123,20 +129,24 @@ export default function TarotSetupClient() {
           disabled={!isFormValid || createSession.isPending || (mode === 'YOUR_DECK' && (!selectedSpread || selectedCardIds.length !== selectedSpread.positionCount))}
           style={{
             backgroundColor: (!isFormValid || createSession.isPending || (mode === 'YOUR_DECK' && (!selectedSpread || selectedCardIds.length !== selectedSpread.positionCount)))
-              ? 'rgba(44, 51, 66, 0.5)'
-              : '#D4B857',
-            margin: 16,
+              ? colors.borderMuted
+              : colors.primary,
+            marginHorizontal: 16,
+            marginTop: mode === 'YOUR_DECK' ? 8 : 16,
+            marginBottom: 16,
             paddingVertical: 16,
             borderRadius: 12,
             alignItems: 'center',
+            minHeight: 48,
           }}
         >
           <Text
-            className={`font-body font-medium ${
-              (!isFormValid || createSession.isPending || (mode === 'YOUR_DECK' && (!selectedSpread || selectedCardIds.length !== selectedSpread.positionCount)))
-                ? 'text-textMuted'
-                : 'text-background'
-            }`}
+            style={{
+              fontFamily: fonts.bodyMedium,
+              color: (!isFormValid || createSession.isPending || (mode === 'YOUR_DECK' && (!selectedSpread || selectedCardIds.length !== selectedSpread.positionCount)))
+                ? colors.textMuted
+                : colors.background,
+            }}
           >
             {createSession.isPending ? 'Đang tạo phiên...' : 'Bắt đầu'}
           </Text>

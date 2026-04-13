@@ -4,6 +4,7 @@ import { useTarotSessionStore } from '@/store/useTarotSessionStore'
 import type { Spread } from '@/types'
 import React, { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
+import { colors, fonts } from '@/theme/index'
 
 interface SpreadSelectorProps {
   spreads: Spread[]
@@ -48,8 +49,8 @@ export function SpreadSelector({ spreads }: SpreadSelectorProps) {
             <Pressable
               key={spread.spreadId}
               onPress={() => handleSelect(spread)}
-              style={[{ backgroundColor: 'rgba(26, 32, 64, 0.85)' }]}
-              className={`p-4 rounded-xl border w-40 ${
+              style={[{ backgroundColor: colors.surface }]}
+              className={`w-44 rounded-2xl border p-4 ${
                 isDisabled
                   ? 'border-border/50 opacity-40'
                   : isSelected
@@ -58,26 +59,28 @@ export function SpreadSelector({ spreads }: SpreadSelectorProps) {
               }`}
             >
               <Text
-                className="font-heading text-xl text-primary mb-2"
+                className="mb-2 text-[28px]"
+                style={{ color: colors.primary, fontFamily: fonts.heading }}
                 numberOfLines={1}
               >
                 {spread.name}
               </Text>
               <Text
-                className="font-body text-text/80 text-sm mb-4"
+                className="mb-4 text-sm"
+                style={{ color: colors.textMuted, fontFamily: fonts.body }}
                 numberOfLines={2}
               >
                 {spread.description}
               </Text>
 
               <View className="mt-auto flex-row items-center justify-between">
-                <Text className="font-stats text-text/60 text-xs">
+                <Text className="text-xs" style={{ color: colors.textMuted, fontFamily: fonts.stats }}>
                   {spread.positionCount} lá
                 </Text>
               </View>
 
               {isDisabled && (
-                <Text className="font-body text-error mt-2 text-xs">
+                <Text className="mt-2 text-xs" style={{ color: colors.error, fontFamily: fonts.body }}>
                   Cần {spread.minCardsRequired} lá. Bạn có{' '}
                   {myCards?.length ?? 0} lá.
                 </Text>
