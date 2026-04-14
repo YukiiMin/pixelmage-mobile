@@ -72,15 +72,22 @@ export function PackDetail({ packId }: Props) {
   }
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.background }} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      showsVerticalScrollIndicator={false}
+    >
       <Image
-        source={pack.imageUrl ? { uri: pack.imageUrl } : require('@/assets/images/placeholder.jpg')}
+        source={
+          pack.imageUrl
+            ? { uri: pack.imageUrl }
+            : require('../../../../assets/images/placeholder.jpg')
+        }
         className="w-full h-64 bg-slate-800"
         contentFit="cover"
       />
-      
-      <Pressable 
-        onPress={() => router.back()} 
+
+      <Pressable
+        onPress={() => router.back()}
         className="absolute top-12 left-4 w-10 h-10 rounded-full bg-black/50 items-center justify-center"
       >
         <ArrowLeft size={20} color={colors.text} />
@@ -89,44 +96,134 @@ export function PackDetail({ packId }: Props) {
       <View className="p-5">
         <View className="flex-row justify-between items-start mb-4">
           <View className="flex-1 mr-4">
-            <Text style={{ fontFamily: fonts.heading, color: colors.text, fontSize: 24 }}>
+            <Text
+              style={{
+                fontFamily: fonts.heading,
+                color: colors.text,
+                fontSize: 24,
+              }}
+            >
               {pack.name}
             </Text>
           </View>
           <View className="items-end">
-            <Text style={{ fontFamily: fonts.stats, color: colors.primary, fontSize: 20 }}>
+            <Text
+              style={{
+                fontFamily: fonts.stats,
+                color: colors.primary,
+                fontSize: 20,
+              }}
+            >
               {pack.price.toLocaleString('vi-VN')} đ
             </Text>
           </View>
         </View>
 
-        <Text style={{ fontFamily: fonts.body, color: colors.textMuted, fontSize: 15, lineHeight: 22 }} className="mb-6">
+        <Text
+          style={{
+            fontFamily: fonts.body,
+            color: colors.textMuted,
+            fontSize: 15,
+            lineHeight: 22,
+          }}
+          className="mb-6"
+        >
           {pack.description}
         </Text>
 
         {/* Drop Rate Table */}
         <View className="bg-slate-800/50 rounded-xl p-4 mb-8 border border-slate-700/50">
-          <Text style={{ fontFamily: fonts.stats, color: colors.text, fontSize: 14 }} className="mb-3">
+          <Text
+            style={{
+              fontFamily: fonts.stats,
+              color: colors.text,
+              fontSize: 14,
+            }}
+            className="mb-3"
+          >
             TỶ LỆ RƠI THẺ (DROP RATE)
           </Text>
-          
+
           <View className="flex-row border-b border-slate-700 pb-2 mb-2">
-            <Text style={{ fontFamily: fonts.bodyMedium, color: colors.textMuted, flex: 2 }}>Slot</Text>
-            <Text style={{ fontFamily: fonts.bodyMedium, color: rarityConfig.COMMON.color, flex: 1, textAlign: 'center' }}>C</Text>
-            <Text style={{ fontFamily: fonts.bodyMedium, color: rarityConfig.RARE.color, flex: 1, textAlign: 'center' }}>R</Text>
-            <Text style={{ fontFamily: fonts.bodyMedium, color: rarityConfig.LEGENDARY.color, flex: 1, textAlign: 'center' }}>L</Text>
+            <Text
+              style={{
+                fontFamily: fonts.bodyMedium,
+                color: colors.textMuted,
+                flex: 2,
+              }}
+            >
+              Slot
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.bodyMedium,
+                color: rarityConfig.COMMON.color,
+                flex: 1,
+                textAlign: 'center',
+              }}
+            >
+              C
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.bodyMedium,
+                color: rarityConfig.RARE.color,
+                flex: 1,
+                textAlign: 'center',
+              }}
+            >
+              R
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.bodyMedium,
+                color: rarityConfig.LEGENDARY.color,
+                flex: 1,
+                textAlign: 'center',
+              }}
+            >
+              L
+            </Text>
           </View>
 
           {DROP_RATES.map((rate, i) => (
-            <View key={i} className="flex-row py-2 border-b border-slate-700/50 last:border-0">
-              <Text style={{ fontFamily: fonts.body, color: colors.text, flex: 2 }}>{rate.slot}</Text>
-              <Text style={{ fontFamily: fonts.stats, color: colors.text, flex: 1, textAlign: 'center' }}>
+            <View
+              key={i}
+              className="flex-row py-2 border-b border-slate-700/50 last:border-0"
+            >
+              <Text
+                style={{ fontFamily: fonts.body, color: colors.text, flex: 2 }}
+              >
+                {rate.slot}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: fonts.stats,
+                  color: colors.text,
+                  flex: 1,
+                  textAlign: 'center',
+                }}
+              >
                 {rate.common > 0 ? `${rate.common}%` : '-'}
               </Text>
-              <Text style={{ fontFamily: fonts.stats, color: colors.text, flex: 1, textAlign: 'center' }}>
+              <Text
+                style={{
+                  fontFamily: fonts.stats,
+                  color: colors.text,
+                  flex: 1,
+                  textAlign: 'center',
+                }}
+              >
                 {rate.rare > 0 ? `${rate.rare}%` : '-'}
               </Text>
-              <Text style={{ fontFamily: fonts.stats, color: colors.text, flex: 1, textAlign: 'center' }}>
+              <Text
+                style={{
+                  fontFamily: fonts.stats,
+                  color: colors.text,
+                  flex: 1,
+                  textAlign: 'center',
+                }}
+              >
                 {rate.legendary > 0 ? `${rate.legendary}%` : '-'}
               </Text>
             </View>
@@ -145,16 +242,32 @@ export function PackDetail({ packId }: Props) {
             <ActivityIndicator size="small" color={colors.background} />
           ) : (
             <>
-              <ShoppingCart size={20} color={isSoldOut ? colors.textMuted : colors.background} className="mr-2" />
+              <ShoppingCart
+                size={20}
+                color={isSoldOut ? colors.textMuted : colors.background}
+                className="mr-2"
+              />
               <Text
-                style={{ fontFamily: fonts.bodyMedium, color: isSoldOut ? colors.textMuted : colors.background, fontSize: 16 }}
+                style={{
+                  fontFamily: fonts.bodyMedium,
+                  color: isSoldOut ? colors.textMuted : colors.background,
+                  fontSize: 16,
+                }}
               >
                 {isSoldOut ? 'HẾT HÀNG' : 'MUA PACK (WEB)'}
               </Text>
             </>
           )}
         </Pressable>
-        <Text style={{ fontFamily: fonts.body, color: colors.textMuted, fontSize: 12, textAlign: 'center' }} className="mt-3">
+        <Text
+          style={{
+            fontFamily: fonts.body,
+            color: colors.textMuted,
+            fontSize: 12,
+            textAlign: 'center',
+          }}
+          className="mt-3"
+        >
           Sẽ chuyển hướng tới giao diện Web để thanh toán an toàn
         </Text>
       </View>

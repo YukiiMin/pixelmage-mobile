@@ -30,7 +30,7 @@ function PackRow({ pack, index }: PackRowProps) {
         style={{ opacity: isSoldOut ? 0.6 : 1 }}
       >
         <Image
-          source={pack.imageUrl ? { uri: pack.imageUrl } : require('@/assets/images/placeholder.jpg')}
+          source={pack.imageUrl ? { uri: pack.imageUrl } : require('../../../../assets/images/placeholder.jpg')}
           className="w-full h-32 bg-slate-700"
           contentFit="cover"
         />
