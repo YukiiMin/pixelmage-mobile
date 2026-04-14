@@ -17,6 +17,7 @@
  */
 
 import { secureStore } from './secureStore'
+import { mockApiFetch } from '@/mock-data/mock-api'
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -81,6 +82,7 @@ function rejectQueue(err: unknown): void {
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
 
 const BE_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:8080').replace(/\/$/, '')
+const USE_MOCK_API = process.env.EXPO_PUBLIC_USE_MOCK_API === 'true'
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const accessToken = await secureStore.get('accessToken')
@@ -98,6 +100,13 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
   const executeRequest = (token: string | null) =>
     fetch(BE_BASE_URL + path, { ...init, headers: buildHeaders(token) })
+
+  if (USE_MOCK_API) {
+    return mockApiFetch<T>(path, {
+      ...init,
+      headers: buildHeaders(accessToken),
+    })
+  }
 
   let response = await executeRequest(accessToken)
 

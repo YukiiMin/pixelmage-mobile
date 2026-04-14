@@ -21,7 +21,7 @@ export function CardTemplateGrid() {
   return (
     <View className="flex-1">
       {/* Filters */}
-      <View className="flex-row px-4 py-3">
+      <View className="flex-row px-4 py-4">
         {(['ALL', 'COMMON', 'RARE', 'LEGENDARY'] as const).map(f => {
           const isSelected = filter === f
           const activeColor = f === 'ALL' ? colors.primary : rarityConfig[f].color
@@ -55,7 +55,22 @@ export function CardTemplateGrid() {
         keyExtractor={(item) => String(item.cardTemplateId)}
         numColumns={2}
         renderItem={({ item }) => <CardThumbnail template={item} onPress={() => {}} />}
-        contentContainerStyle={{ padding: 8 }}
+        columnWrapperStyle={{ paddingHorizontal: 8, justifyContent: 'space-between' }}
+        contentContainerStyle={{ paddingBottom: 24, paddingTop: 8 }}
+        ListHeaderComponent={<View style={{ height: 12 }} />}
+        ListEmptyComponent={
+          <View
+            className="mx-4 mt-6 rounded-2xl border px-6 py-8"
+            style={{ backgroundColor: colors.surface, borderColor: colors.borderMuted }}
+          >
+            <Text className="text-center text-xl" style={{ fontFamily: fonts.heading, color: colors.text }}>
+              Không có thẻ phù hợp
+            </Text>
+            <Text className="mt-2 text-center" style={{ fontFamily: fonts.body, color: colors.textMuted }}>
+              Hãy thử đổi bộ lọc độ hiếm để xem thêm thẻ.
+            </Text>
+          </View>
+        }
       />
     </View>
   )

@@ -17,7 +17,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: (props) => <HapticTab {...props} />,
         tabBarStyle: {
-          backgroundColor: 'rgba(26, 32, 64, 0.85)',
+          backgroundColor: colors.surface,
           borderTopColor: colors.border,
           borderTopWidth: 1,
         },

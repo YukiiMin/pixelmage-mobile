@@ -78,9 +78,7 @@ export function PackDetail({ packId }: Props) {
     >
       <Image
         source={
-          pack.imageUrl
-            ? { uri: pack.imageUrl }
-            : require('../../../../assets/images/placeholder.jpg')
+          pack.imageUrl ? { uri: pack.imageUrl } : require('../../../../assets/images/placeholder.jpg')
         }
         className="w-full h-64 bg-slate-800"
         contentFit="cover"

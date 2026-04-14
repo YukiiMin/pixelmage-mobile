@@ -1,4 +1,4 @@
-import { fonts, rarityConfig } from '@/theme/index'
+import { colors, fonts, rarityConfig } from '@/theme/index'
 import type { UserInventory } from '@/types/my-cards'
 import type { MarketCardTemplate } from '@/types'
 import { Image } from 'expo-image'
@@ -51,22 +51,30 @@ export function CardThumbnail({ card, template, onPress }: Props) {
   const rarity = rarityConfig[itemTemplate.rarity]
 
   return (
-    <Pressable onPress={onPress} className="w-1/2 p-2">
+    <Pressable onPress={onPress} style={{ width: '100%', padding: 8 }}>
       <Animated.View
         style={[
           {
+            width: '100%',
+            aspectRatio: 2.5 / 3.5,
+            minHeight: 168,
             borderColor: rarity.border,
             borderWidth: isLegendary ? 2 : 1,
-            backgroundColor: 'rgba(26, 32, 64, 0.85)',
+            backgroundColor: colors.surface,
+            borderRadius: 12,
+            overflow: 'hidden',
           },
           rarity.glow && !isLegendary ? (rarity.glow as import('react-native').ViewStyle) : {},
           animatedGlowStyle,
         ]}
-        className="rounded-xl overflow-hidden aspect-[2.5/3.5] bg-[#0d1126]"
       >
         <Image
-          source={{ uri: itemTemplate.imageUrl }}
-          className="flex-1 w-full"
+          source={
+            itemTemplate.imageUrl
+              ? { uri: itemTemplate.imageUrl }
+              : require('../../../../assets/images/placeholder.jpg')
+          }
+          style={{ width: '100%', height: '100%' }}
           contentFit="cover"
           transition={200}
         />

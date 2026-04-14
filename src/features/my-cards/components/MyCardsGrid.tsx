@@ -13,7 +13,7 @@ export function MyCardsGrid({ cards }: Props) {
   const prefersReduced = useReducedMotion()
 
   return (
-    <View className="flex-row flex-wrap p-2">
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 4 }}>
       {cards.map((card, i) => {
         const BaseView = prefersReduced ? View : Animated.View
         const animationProps = prefersReduced 
@@ -21,7 +21,7 @@ export function MyCardsGrid({ cards }: Props) {
           : { entering: FadeInDown.delay(Math.min(i, 5) * 80).duration(400) }
 
         return (
-          <BaseView key={card.inventoryId} {...animationProps} className="w-1/2">
+          <BaseView key={card.inventoryId} {...animationProps} style={{ width: '50%' }}>
             <CardThumbnail 
               card={card} 
               onPress={() => {

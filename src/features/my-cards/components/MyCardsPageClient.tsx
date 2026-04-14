@@ -18,11 +18,11 @@ export function MyCardsPageClient() {
   const { data: myCards, isLoading, error } = useMyCards(userId)
 
   return (
-    <ScrollView className="flex-1 bg-[#0A0D1E]">
-      <View className="py-8 px-4">
+    <ScrollView className="flex-1" style={{ backgroundColor: colors.background }}>
+      <View className="px-4 pb-8 pt-10">
         <Text
           style={{ fontFamily: fonts.heading, color: colors.primary }}
-          className="text-3xl text-center mb-6"
+          className="mb-6 text-center text-4xl"
         >
           Thẻ Của Tôi
         </Text>
@@ -37,7 +37,7 @@ export function MyCardsPageClient() {
 
         {error && (
           <Text
-            style={{ fontFamily: fonts.body, color: '#e74c3c' }}
+            style={{ fontFamily: fonts.body, color: colors.error }}
             className="text-center mt-6"
           >
             Không thể tải danh sách thẻ
@@ -45,7 +45,11 @@ export function MyCardsPageClient() {
         )}
 
         {myCards && myCards.length === 0 && <EmptyState />}
-        {myCards && myCards.length > 0 && <MyCardsGrid cards={myCards} />}
+        {myCards && myCards.length > 0 && (
+          <View style={{ paddingTop: 12 }}>
+            <MyCardsGrid cards={myCards} />
+          </View>
+        )}
       </View>
     </ScrollView>
   )

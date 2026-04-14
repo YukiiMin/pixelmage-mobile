@@ -42,6 +42,18 @@ To learn more about developing your project with Expo, look at the following res
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
+## Mock backend mode
+
+When backend is unavailable, you can run the app with in-app mock API responses.
+
+1. Set env toggle:
+   - `EXPO_PUBLIC_USE_MOCK_API=true`
+2. Start app normally (`npm run start` / `npx expo start`).
+3. To return to real backend, remove the variable or set:
+   - `EXPO_PUBLIC_USE_MOCK_API=false`
+
+Mock routing is centralized in `src/api/client.ts` and `src/mock-data/mock-api.ts`.
+
 ## Join the community
 
 Join our community of developers creating universal apps.

@@ -235,7 +235,7 @@ export function LoginForm() {
       <Animated.View entering={FadeInDown.duration(500).delay(520)} style={{ marginTop: 16 }}>
         <TouchableOpacity
           onPress={googleAuth.signIn}
-          disabled={googleAuth.isPending}
+          disabled={googleAuth.isPending || !googleAuth.isConfigured}
           activeOpacity={0.8}
           style={{
             backgroundColor: 'rgba(26, 32, 64, 0.85)',
@@ -247,6 +247,7 @@ export function LoginForm() {
             flexDirection: 'row',
             justifyContent: 'center',
             gap: 10,
+            opacity: googleAuth.isConfigured ? 1 : 0.5,
           }}
         >
           {/* Google logo */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TextInput, Text } from 'react-native';
 import { useTarotSessionStore } from '@/store/useTarotSessionStore';
+import { colors, fonts } from '@/theme/index';
 
 export function QuestionInput() {
   const { mainQuestion } = useTarotSessionStore();
@@ -11,16 +12,21 @@ export function QuestionInput() {
 
   return (
     <View className="mt-4 px-4">
-      <Text className="font-body text-text/80 mb-2">Câu hỏi của bạn (Tùy chọn)</Text>
+      <Text className="mb-2" style={{ color: colors.textMuted, fontFamily: fonts.body }}>
+        Câu hỏi của bạn (Tùy chọn)
+      </Text>
       <TextInput
         value={mainQuestion}
         onChangeText={handleChange}
         placeholder="VD: Điều gì đang cản trở tôi lúc này?"
-        placeholderTextColor="#9BA5B0"
-        className="font-body text-text border border-border/50 rounded-xl px-4 py-3 bg-surface/85"
+        placeholderTextColor={colors.textMuted}
+        className="rounded-xl border px-4 py-3"
         style={{
-          backgroundColor: 'rgba(26, 32, 64, 0.85)',
-          borderColor: 'rgba(44, 51, 66, 0.5)',
+          color: colors.text,
+          fontFamily: fonts.body,
+          backgroundColor: colors.surface,
+          borderColor: colors.borderMuted,
+          minHeight: 48,
         }}
       />
     </View>
